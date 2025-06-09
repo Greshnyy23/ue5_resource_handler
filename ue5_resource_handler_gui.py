@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from ue5_resource_handler import UE5ResourceHandler
+from src.ue5_resource_handler import UE5ResourceHandler
 
 
 class UE5ResourceHandlerGUI:
@@ -30,8 +30,10 @@ class UE5ResourceHandlerGUI:
         self.extract_label.grid(row=2, column=0, padx=10, pady=10)
         self.extract_entry = tk.Entry(root, width=50)
         self.extract_entry.grid(row=2, column=1, padx=10, pady=10)
-        self.extract_button = tk.Button(root, text="Browse", command=lambda: self.browse_directory(self.extract_entry))
-        self.extract_button.grid(row=2, column=2, padx=10, pady=10)
+        self.extract_browse_button = tk.Button(
+            root, text="Browse", command=lambda: self.browse_directory(self.extract_entry)
+        )
+        self.extract_browse_button.grid(row=2, column=2, padx=10, pady=10)
 
         # Execute extraction
         self.extract_button = tk.Button(root, text="Extract .pak", command=self.extract_pak)

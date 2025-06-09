@@ -1,5 +1,6 @@
 import subprocess
 import os
+import shutil
 
 class UE5ResourceHandler:
     def __init__(self, unrealpak_path=""):
@@ -16,11 +17,26 @@ class UE5ResourceHandler:
         subprocess.run([self.unrealpak_path, pak_path, "-Extract", extract_to], check=True)
 
     def parse_ucas(self, ucas_path, utoc_path):
-        """Заготовка для парсинга .ucas и .utoc"""
-        # TODO: Реализовать разбор
-        print(f"Парсинг {ucas_path} и {utoc_path} (заглушка)")
+        """Простейший парсер .ucas и .utoc."""
+        if not os.path.exists(ucas_path):
+            raise FileNotFoundError(".ucas файл не найден")
+        if not os.path.exists(utoc_path):
+            raise FileNotFoundError(".utoc файл не найден")
+
+        with open(utoc_path, "rb") as f:
+            magic = f.read(4)
+
+        print(f"UTOC magic: {magic}")
+        return magic
 
     def extract_ubulk(self, ubulk_path, export_to):
-        """Заготовка для обработки .ubulk"""
-        # TODO: Реализовать обработку
-        print(f"Обработка {ubulk_path} и экспорт в {export_to} (заглушка)")
+        """Пример обработки .ubulk (копирование в каталог)."""
+        if not os.path.exists(ubulk_path):
+            raise FileNotFoundError(".ubulk файл не найден")
+        if not os.path.exists(export_to):
+            os.makedirs(export_to)
+
+        dest = os.path.join(export_to, os.path.basename(ubulk_path))
+        shutil.copyfile(ubulk_path, dest)
+        print(f"UBULK скопирован в {dest}")
+        return dest
