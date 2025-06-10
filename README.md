@@ -48,8 +48,8 @@ python ue5_resource_handler_gui.py
 После установки пакета доступна команда `ue5-handler`.
 Доступные подкоманды:
 * `extract-pak` – извлечение PAK-файла;
-* `parse-ucas` – разбор файлов UCAS/UTOC (ограниченный);
-* `extract-ubulk` – копирование UBULK в каталог.
+* `parse-ucas` – разбор файлов UCAS/UTOC (показывает magic и версию);
+* `extract-ubulk` – копирование UBULK в каталог (печатает путь сохранения).
 
 ## Тестирование
 

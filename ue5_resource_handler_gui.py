@@ -78,6 +78,11 @@ class UE5ResourceHandlerGUI:
         self.ubulk_button = tk.Button(root, text="Process .ubulk", command=self.process_ubulk)
         self.ubulk_button.grid(row=9, column=1, pady=10)
 
+    def get_handler(self):
+        if not self.handler:
+            self.handler = UE5ResourceHandler(self.unrealpak_entry.get())
+        return self.handler
+
     def browse_unrealpak(self):
         path = filedialog.askopenfilename(filetypes=[("Executable files", "*.exe")])
         if path:
@@ -99,14 +104,13 @@ class UE5ResourceHandlerGUI:
     def extract_pak(self):
         pak_path = self.pak_entry.get()
         extract_to = self.extract_entry.get()
-        unrealpak_path = self.unrealpak_entry.get()
-
-        if not all([pak_path, extract_to, unrealpak_path]):
+        if not all([pak_path, extract_to]):
             messagebox.showerror("Error", "Please fill in all fields.")
             return
 
-        self.handler = UE5ResourceHandler(unrealpak_path)
-        self.handler.extract_pak(pak_path, extract_to)
+        handler = self.get_handler()
+        handler.extract_pak(pak_path, extract_to)
+        messagebox.showinfo("Info", "Extraction finished")
 
     def parse_ucas_utoc(self):
         ucas_path = self.ucas_entry.get()
@@ -116,11 +120,8 @@ class UE5ResourceHandlerGUI:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
 
-        if not self.handler:
-            messagebox.showerror("Error", "Please configure UnrealPak path first.")
-            return
-
-        self.handler.parse_ucas(ucas_path, utoc_path)
+        info = self.get_handler().parse_ucas(ucas_path, utoc_path)
+        messagebox.showinfo("Info", f"Magic: {info['magic']}\nVersion: {info['version']}")
 
     def process_ubulk(self):
         ubulk_path = self.ubulk_entry.get()
@@ -130,11 +131,8 @@ class UE5ResourceHandlerGUI:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
 
-        if not self.handler:
-            messagebox.showerror("Error", "Please configure UnrealPak path first.")
-            return
-
-        self.handler.extract_ubulk(ubulk_path, export_to)
+        dest = self.get_handler().extract_ubulk(ubulk_path, export_to)
+        messagebox.showinfo("Info", f"Saved to {dest}")
 
 
 if __name__ == "__main__":

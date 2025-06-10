@@ -17,7 +17,7 @@ class UE5ResourceHandler:
         subprocess.run([self.unrealpak_path, pak_path, "-Extract", extract_to], check=True)
 
     def parse_ucas(self, ucas_path, utoc_path):
-        """Простейший парсер .ucas и .utoc."""
+        """Небольшой парсер заголовков `.ucas`/`.utoc`."""
         if not os.path.exists(ucas_path):
             raise FileNotFoundError(".ucas файл не найден")
         if not os.path.exists(utoc_path):
@@ -25,9 +25,16 @@ class UE5ResourceHandler:
 
         with open(utoc_path, "rb") as f:
             magic = f.read(4)
+            version_bytes = f.read(4)
 
-        print(f"UTOC magic: {magic}")
-        return magic
+        result = {
+            "magic": magic,
+            "version": int.from_bytes(version_bytes, "little") if version_bytes else None,
+            "ucas_size": os.path.getsize(ucas_path),
+        }
+
+        print(f"UTOC magic: {result['magic']} version: {result['version']}")
+        return result
 
     def extract_ubulk(self, ubulk_path, export_to):
         """Пример обработки .ubulk (копирование в каталог)."""

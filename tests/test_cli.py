@@ -1,5 +1,9 @@
 import os
+import sys
+import os.path as op
 import pytest
+
+sys.path.insert(0, op.abspath(op.join(op.dirname(__file__), "..")))
 from src.ue5_resource_handler import UE5ResourceHandler
 
 

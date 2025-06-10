@@ -1,5 +1,9 @@
 import os
+import sys
+import os.path as op
 import pytest
+
+sys.path.insert(0, op.abspath(op.join(op.dirname(__file__), "..")))
 from src.ue5_resource_handler import UE5ResourceHandler
 
 def test_init():
@@ -25,5 +29,18 @@ def test_extract_ubulk_copy(tmp_path):
     dest_dir = tmp_path / "out"
     result = h.extract_ubulk(str(src), str(dest_dir))
     assert os.path.exists(result)
+
+
+def test_parse_ucas_header(tmp_path):
+    h = UE5ResourceHandler()
+    ucas = tmp_path / "f.ucas"
+    utoc = tmp_path / "f.utoc"
+    ucas.write_bytes(b"data")
+    utoc.write_bytes(b"UTOC" + (1).to_bytes(4, "little"))
+
+    info = h.parse_ucas(str(ucas), str(utoc))
+    assert info["magic"] == b"UTOC"
+    assert info["version"] == 1
+    assert info["ucas_size"] == os.path.getsize(ucas)
 
 

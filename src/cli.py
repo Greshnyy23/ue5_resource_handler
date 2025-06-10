@@ -26,12 +26,13 @@ def main():
         print("Извлечение завершено.")
     elif args.command == "parse-ucas":
         handler = UE5ResourceHandler()
-        handler.parse_ucas(args.ucas, args.utoc)
-        print("Парсинг завершен.")
+        info = handler.parse_ucas(args.ucas, args.utoc)
+        for k, v in info.items():
+            print(f"{k}: {v}")
     elif args.command == "extract-ubulk":
         handler = UE5ResourceHandler()
-        handler.extract_ubulk(args.ubulk, args.out)
-        print("Экспорт завершен.")
+        dest = handler.extract_ubulk(args.ubulk, args.out)
+        print(f"Экспорт завершен: {dest}")
 
 if __name__ == "__main__":
     main()
